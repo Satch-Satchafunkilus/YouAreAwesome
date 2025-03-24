@@ -32,15 +32,11 @@ struct ContentView: View {
                 let message1 = "You are Awesome!"
                 let message2 = "You are Great!"
                 
-                if message == message1 {
-                    imageString = imageString2
-                    message = message2
-                } else {
-                    imageString = imageString1
-                    message = message1
-                }
+                imageString = message == message1 ? imageString2 : imageString1
+                message = message == message1 ? message2 : message1
             }
             .buttonStyle(.borderedProminent)
+            .font(.title2)
             .tint(.orange)
         }
         .padding()
