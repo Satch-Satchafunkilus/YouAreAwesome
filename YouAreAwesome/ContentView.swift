@@ -11,7 +11,6 @@ struct ContentView: View {
     @State private var imageName = ""
     @State private var imageNumber = 0
     @State private var message = ""
-    @State private var messageNumber = 0
 
     var body: some View {
         VStack {
@@ -43,23 +42,12 @@ struct ContentView: View {
                     "Fabulous? That's You!",
                     "You Make Me Smile!",
                 ]
-
-                message = messages[messageNumber]
-
-                messageNumber += 1
-
-                if messageNumber == messages.count {
-                    messageNumber = 0
-                }
-
+                
+                message = messages[Int.random(in: 0..<messages.count)]
+                imageNumber = Int.random(in: 0...9)
+                
                 //TODO: - Update the imageName variable -
                 imageName = "image\(imageNumber)"
-
-                imageNumber += 1
-
-                if imageNumber > 9 {
-                    imageNumber = 0
-                }
             }
             .buttonStyle(.borderedProminent)
             .font(.title2)
