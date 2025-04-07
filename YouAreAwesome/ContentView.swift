@@ -6,12 +6,16 @@
 //
 
 import SwiftUI
+import AVFAudio
 
 struct ContentView: View {
     @State private var imageName = ""
-    @State private var lastImageNumber = 0
+    @State private var lastImageNumber = -1
     @State private var message = ""
-    @State private var lastMessageNumber = 0
+    @State private var lastMessageNumber = -1
+    
+    // For Assets Cat images labeled image0 to image9
+    let numberOfImages = 10
 
     var body: some View {
         VStack {
@@ -56,7 +60,7 @@ struct ContentView: View {
                 lastMessageNumber = messageNumber
                 
                 repeat {
-                    imageNumber = Int.random(in: 0...9)
+                    imageNumber = Int.random(in: 0...(numberOfImages - 1))
                 } while imageNumber == lastImageNumber
                 
                 //TODO: - Update the imageName variable -
