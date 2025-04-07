@@ -49,16 +49,19 @@ struct ContentView: View {
 
                 repeat {
                     messageNumber = Int.random(in: 0..<messages.count)
-                    imageNumber = Int.random(in: 0...9)
                 } while messageNumber == lastMessageNumber
-                    || imageNumber == lastImageNumber
 
-                lastMessageNumber = messageNumber
-                lastImageNumber = imageNumber
-                
-                //TODO: - Update the message & imageName variables -
+                //TODO: - Update the message variable -
                 message = messages[messageNumber]
+                lastMessageNumber = messageNumber
+                
+                repeat {
+                    imageNumber = Int.random(in: 0...9)
+                } while imageNumber == lastImageNumber
+                
+                //TODO: - Update the imageName variable -
                 imageName = "image\(imageNumber)"
+                lastImageNumber = imageNumber
             }
             .buttonStyle(.borderedProminent)
             .font(.title2)
