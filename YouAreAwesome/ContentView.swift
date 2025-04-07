@@ -5,17 +5,22 @@
 //  Created by Tushar Munge on 3/18/25.
 //
 
-import SwiftUI
 import AVFAudio
+import SwiftUI
 
 struct ContentView: View {
     @State private var imageName = ""
     @State private var lastImageNumber = -1
     @State private var message = ""
     @State private var lastMessageNumber = -1
-    
-    // For Assets Cat images labeled image0 to image9
+    @State private var soundName = ""
+    @State private var lastSoundNumber = -1
+    @State private var audioPlayer: AVAudioPlayer!
+
+    // For Assets Cat images labeled image0 to image9, and
+    // sounds labeled sound0 to sound5
     let numberOfImages = 10
+    let numberOfSounds = 6
 
     var body: some View {
         VStack {
@@ -28,6 +33,8 @@ struct ContentView: View {
                 .frame(height: 100)
                 .animation(.easeInOut(duration: 0.15), value: message)
 
+            Spacer()
+            
             Image(imageName)
                 .resizable()
                 .scaledToFit()
@@ -50,6 +57,7 @@ struct ContentView: View {
 
                 var messageNumber: Int
                 var imageNumber: Int
+                var soundNumber: Int
 
                 repeat {
                     messageNumber = Int.random(in: 0..<messages.count)
@@ -58,14 +66,38 @@ struct ContentView: View {
                 //TODO: - Update the message variable -
                 message = messages[messageNumber]
                 lastMessageNumber = messageNumber
-                
+
                 repeat {
                     imageNumber = Int.random(in: 0...(numberOfImages - 1))
                 } while imageNumber == lastImageNumber
-                
+
                 //TODO: - Update the imageName variable -
                 imageName = "image\(imageNumber)"
                 lastImageNumber = imageNumber
+
+                repeat {
+                    soundNumber = Int.random(in: 0..<(numberOfSounds - 1))
+                } while soundNumber == lastSoundNumber
+                
+                //TODO: - Update the soundName variable -
+                soundName = "sound\(soundNumber)"
+                lastSoundNumber = soundNumber
+
+                //TODO: - Get the Sound file -
+                guard let soundFile = NSDataAsset(name: soundName) else {
+                    print("😡 Could not read file named \(soundName)")
+
+                    return
+                }
+
+                do {
+                    audioPlayer = try AVAudioPlayer(data: soundFile.data)
+                    audioPlayer.play()
+                } catch {
+                    print(
+                        "😡 ERROR: \(error.localizedDescription) creating audioPlayer"
+                    )
+                }
             }
             .buttonStyle(.borderedProminent)
             .font(.title2)
