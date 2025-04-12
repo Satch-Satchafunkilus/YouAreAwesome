@@ -13,7 +13,6 @@ struct ContentView: View {
     @State private var lastImageNumber = -1
     @State private var message = ""
     @State private var lastMessageNumber = -1
-    @State private var soundName = ""
     @State private var lastSoundNumber = -1
     @State private var audioPlayer: AVAudioPlayer!
 
@@ -34,7 +33,7 @@ struct ContentView: View {
                 .animation(.easeInOut(duration: 0.15), value: message)
 
             Spacer()
-            
+
             Image(imageName)
                 .resizable()
                 .scaledToFit()
@@ -55,54 +54,61 @@ struct ContentView: View {
                     "You Make Me Smile!",
                 ]
 
-                var messageNumber: Int
-                var imageNumber: Int
-                var soundNumber: Int
-
-                repeat {
-                    messageNumber = Int.random(in: 0..<messages.count)
-                } while messageNumber == lastMessageNumber
+                lastMessageNumber = nonRepeatingRandom(
+                    lastNumber: lastMessageNumber,
+                    upperBound: (messages.count - 1)
+                )
 
                 //TODO: - Update the message variable -
-                message = messages[messageNumber]
-                lastMessageNumber = messageNumber
+                message = messages[lastMessageNumber]
 
-                repeat {
-                    imageNumber = Int.random(in: 0...(numberOfImages - 1))
-                } while imageNumber == lastImageNumber
+                lastImageNumber = nonRepeatingRandom(
+                    lastNumber: lastImageNumber,
+                    upperBound: (numberOfImages - 1)
+                )
 
                 //TODO: - Update the imageName variable -
-                imageName = "image\(imageNumber)"
-                lastImageNumber = imageNumber
+                imageName = "image\(lastImageNumber)"
 
-                repeat {
-                    soundNumber = Int.random(in: 0..<(numberOfSounds - 1))
-                } while soundNumber == lastSoundNumber
-                
-                //TODO: - Update the soundName variable -
-                soundName = "sound\(soundNumber)"
-                lastSoundNumber = soundNumber
+                lastSoundNumber = nonRepeatingRandom(
+                    lastNumber: lastSoundNumber,
+                    upperBound: (numberOfSounds - 1)
+                )
 
-                //TODO: - Get the Sound file -
-                guard let soundFile = NSDataAsset(name: soundName) else {
-                    print("😡 Could not read file named \(soundName)")
-
-                    return
-                }
-
-                do {
-                    audioPlayer = try AVAudioPlayer(data: soundFile.data)
-                    audioPlayer.play()
-                } catch {
-                    print(
-                        "😡 ERROR: \(error.localizedDescription) creating audioPlayer"
-                    )
-                }
+                playSound(soundName: "sound\(lastSoundNumber)")
             }
             .buttonStyle(.borderedProminent)
             .font(.title2)
         }
         .padding()
+    }
+
+    func nonRepeatingRandom(lastNumber: Int, upperBound: Int) -> Int {
+        var newNumber: Int
+
+        repeat {
+            newNumber = Int.random(in: 0...upperBound)
+        } while newNumber == lastNumber
+
+        return newNumber
+    }
+    
+    func playSound(soundName: String) {
+        //TODO: - Get the Sound file -
+        guard let soundFile = NSDataAsset(name: soundName) else {
+            print("😡 Could not read file named \(soundName)")
+
+            return
+        }
+
+        do {
+            audioPlayer = try AVAudioPlayer(data: soundFile.data)
+            audioPlayer.play()
+        } catch {
+            print(
+                "😡 ERROR: \(error.localizedDescription) creating audioPlayer"
+            )
+        }
     }
 }
 
